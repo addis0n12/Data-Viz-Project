@@ -20,12 +20,11 @@ Promise.all([
 
   // Create a Mercator projection that fits the data
   const projection = d3.geoMercator()
-  .fitExtent([[20, 20], [width - 20, height - 20]], geoData);
-
-
+    .fitExtent([[20, 20], [width - 20, height - 20]], geoData)
+    .scale(150000)
+    .center([-76.612, 39.290])
 
   console.log("Sample Projection:", projection([-76.612, 39.290])); // Baltimore coordinates
-
 
   const path = d3.geoPath().projection(projection);
 
@@ -41,18 +40,25 @@ Promise.all([
   const maxCalls = d3.max(callCounts.values());
   const colorScale = d3.scaleSequential()
     .domain([0, maxCalls])
-    .interpolator(d3.interpolateBlues);
+    .interpolator(d3.interpolateBlues); // Cant figure this out
 
   // Draw map
   svg.selectAll(".Neighborhood")
     .data(geoData.features)
     .join("path")
     .attr("class", "Neighborhood")
-    .attr("d", path)
-    .attr("fill", d => {
-      const calls = callCountLookup[d.properties.Name] || 0;
-      return colorScale(calls);
-    })
+    .attr("fill", "none")
+    // .attr("stroke-width", 1); // Adjust width as needed
+    // .attr("fill", d => {
+    //   const calls = callCountLookup[d.properties.Name] || 0;
+    //   console.log(calls, colorScale(calls));
+    //   return colorScale(calls);
+    // })
+    .attr("d", d => path(d))
+    // .attr("fill", d => {
+    //   const calls = callCountLookup[d.properties.Name] || 0;
+    //   return colorScale(calls);
+    // }) // Cant figure this out
     .attr("stroke", "black")
     .append("title")
     .text(d => `${d.properties.Name}: ${callCountLookup[d.properties.Name] || 0} calls`);
