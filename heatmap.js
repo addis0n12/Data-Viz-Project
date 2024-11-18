@@ -11,7 +11,7 @@ Promise.all([
   d3.csv("fixedDataset.csv") // CSV file
 ]).then(([geoData, csvData]) => {
   // Log bounds to verify geographic extent
-  const bounds = [[-76.711, 39.197], [-76.529, 39.372]];   //d3.geoBounds(geoData);
+  const bounds = d3.geoBounds(geoData);//[[-76.711, 39.197], [-76.529, 39.372]];   //d3.geoBounds(geoData);
   console.log("GeoJSON Bounds:", bounds); // Should show valid Baltimore area bounds
 
   //console.log("Sample Geometry:", geoData.features[0].geometry);
