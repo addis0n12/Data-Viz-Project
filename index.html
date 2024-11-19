@@ -5,10 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Baltimore 911 Calls</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .svg-container {
+      display: flex;
+      gap: 50px;
+      align-items: flex-start;
+    }
+    .titles {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-right: 30px;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    #callTypes {
+      transform: scale(0.8);
+      transform-origin: top left;
+    }
+  </style>
 </head>
 <body>
-  <svg id="map"></svg>
-  <svg id="callTypes"></svg>
+  <div class="titles">
+    <h5>Calls Per Neighborhood</h5>
+    <h5>Calls per Type</h6>
+  </div>
+  <div class="svg-container">
+    <svg id="map"></svg>
+    <svg id="callTypes"></svg>
+  </div>
+  <h5>Severity of Calls</h5>
   <svg id="severity"></svg>
 
   <script src="heatmap.js"></script>

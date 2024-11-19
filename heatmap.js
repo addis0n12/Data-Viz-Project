@@ -1,5 +1,5 @@
-const width = 500;
-const height = 400;
+const width = 700;
+const height = 550;
 
 const svg = d3.select("#map")
   .attr("width", width)
@@ -48,7 +48,7 @@ Promise.all([
 
   //Legend
   const legend = svg.append("g")
-    .attr("transform", `translate(${width - 50}, ${height - 150})`);
+    .attr("transform", `translate(${width - 75}, ${height - 225})`);
 
   const legendScale = d3.scaleLinear()
     .domain([0, d3.max([...callCounts.values()])])
