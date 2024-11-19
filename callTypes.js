@@ -8,7 +8,7 @@ const ctSvg = d3.select("#callTypes")
     .attr("width", ctWidth)
     .attr("height", ctHeight);
 
-d3.csv("fixedDataset.csv").then(data => {
+d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
     const filteredData = data.filter(d => d.callDateTime.match(selectedMonthRegex));
     
     const descriptionCounts = d3.rollups(filteredData, v => v.length, d => d.description)

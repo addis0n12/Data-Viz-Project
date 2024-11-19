@@ -1,5 +1,5 @@
-const width = 1000;
-const height = 800;
+const width = 500;
+const height = 400;
 
 const svg = d3.select("#map")
   .attr("width", width)
@@ -7,7 +7,7 @@ const svg = d3.select("#map")
 
 Promise.all([
   d3.json("Neighborhood_Statistical_Area_(NSA)_Boundaries.geojson"), // GeoJSON file
-  d3.csv("fixedDataset.csv") // CSV file
+  d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()) // CSV file
 ]).then(([geoData, csvData]) => {
   // Create a Mercator projection that fits the data
   const projection = d3.geoIdentity()
@@ -48,7 +48,7 @@ Promise.all([
 
   //Legend
   const legend = svg.append("g")
-    .attr("transform", `translate(${width - 100}, ${height - 300})`);
+    .attr("transform", `translate(${width - 50}, ${height - 150})`);
 
   const legendScale = d3.scaleLinear()
     .domain([0, d3.max([...callCounts.values()])])
