@@ -10,14 +10,28 @@ const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
 const formatTime = d3.timeFormat('%H:%M');
 
+let originalData = []; // To store the original data for re-filtering
+
 d3.csv('fixedDataset.csv').then(data => {
-    //Filter, change this
-    data = data
-        .filter((item, i) => i % 500 === 0)
-        .map(d => ({
-            callDate: parseDate(d.callDateTime.split(' ')[0]),
-            callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
-        }));
+    originalData = data.map(d => ({
+        callDateTime: d.callDateTime,
+        callDate: parseDate(d.callDateTime.split(' ')[0]),
+        callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+    }));
+    renderChart(0); // Initial render with no filtering
+});
+
+// Render chart based on the target year
+function renderChart(targetYear) {
+    let data = originalData
+        .filter((item, i) => i % 500 === 0);
+
+    // If year is 0 no additional filter is applied
+    if (targetYear !== 0) {
+        data = data.filter(d => d.callDate && d.callDate.getFullYear() === targetYear);
+    }
+
+    sSvg.selectAll('*').remove();
 
     const xScale = d3.scaleTime()
         .domain(d3.extent(data, d => d.callDate))
@@ -50,4 +64,19 @@ d3.csv('fixedDataset.csv').then(data => {
         .attr('r', 4)
         .attr('fill', 'rgb(194, 99, 99)')
         .attr('opacity', 0.7);
+    console.log("Rendered");
+}
+
+// Button event listeners
+d3.select("#y2021").on('click', function () {
+    renderChart(2021);
 });
+
+d3.select("#y2022").on('click', function () {
+    renderChart(2022);
+});
+
+d3.select("#reset").on('click', function () {
+    renderChart(0); // Re-Render with no filter
+});
+
