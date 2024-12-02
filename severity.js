@@ -64,7 +64,6 @@ function renderChart(targetYear) {
         .attr('r', 4)
         .attr('fill', 'rgb(194, 99, 99)')
         .attr('opacity', 0.7);
-    console.log("Rendered");
 }
 
 // Button event listeners
