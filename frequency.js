@@ -2,13 +2,14 @@ const sWidth = 800;
 const sHeight = 400;
 const sMargin = { top: 20, right: 20, bottom: 70, left: 50 };
 
-const sSvg = d3.select('#severity')
+const sSvg = d3.select('#frequency')
     .attr('width', sWidth)
     .attr('height', sHeight);
 
 const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
-const formatTime = d3.timeFormat('%H:%M');
+const formatDate = d3.timeFormat('%Y-%m-%d');
+const formatTime = d3.timeFormat('%I %p');
 
 let originalData = []; // To store the original data for re-filtering
 
@@ -41,7 +42,7 @@ function renderChart(targetYear) {
         .domain(d3.extent(data, d => d.callTime))
         .range([sHeight - sMargin.bottom, sMargin.top]);
 
-    const xAxis = d3.axisBottom(xScale).ticks(12).tickFormat(d3.timeFormat('%Y-%m-%d'));
+    const xAxis = d3.axisBottom(xScale).ticks(12).tickFormat(formatDate);
     const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
 
     sSvg.append('g')
