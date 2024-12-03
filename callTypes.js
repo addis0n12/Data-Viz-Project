@@ -36,7 +36,7 @@ const ctSvg = d3.select("#callTypes")
     .attr("width", ctWidth)
     .attr("height", ctHeight);
 
-d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
+d3.json("data/callTypeData.json").then(data => {
     let filteredData;
 
     const xScale = d3.scaleBand()
@@ -57,11 +57,12 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
         .attr("transform", `translate(${ctMargin.left},0)`);
 
     function updateChart(selectedMonth) {
-        filteredData = data.filter(d => d.callDateTime.startsWith(selectedMonth));
+        const descriptionCounts = data[selectedMonth];
+        // filteredData = data.filter(d => d.callDateTime.startsWith(selectedMonth));
 
-        const descriptionCounts = d3.rollups(filteredData, v => v.length, d => d.description)
-            .sort((a, b) => a[1] - b[1])
-            .slice(-25);
+        // const descriptionCounts = d3.rollups(filteredData, v => v.length, d => d.description)
+        //     .sort((a, b) => a[1] - b[1])
+        //     .slice(-25);
 
         xScale.domain(descriptionCounts.map(d => d[0]));
         yScale.domain([0, d3.max(descriptionCounts, d => d[1])]).nice();

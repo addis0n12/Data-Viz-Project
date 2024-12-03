@@ -7,8 +7,8 @@ const svg = d3.select("#map")
 
 Promise.all([
   d3.json("Neighborhood_Statistical_Area_(NSA)_Boundaries.geojson"), // GeoJSON file
-  d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()) // CSV file
-]).then(([geoData, csvData]) => {
+  d3.json("data/heatmapData.json") // Data file
+]).then(([geoData, data]) => {
   // Create a Mercator projection that fits the data
   const projection = d3.geoIdentity()
     .reflectY(true)
@@ -17,11 +17,12 @@ Promise.all([
   const path = d3.geoPath().projection(projection);
 
   // Aggregate 911 call data
-  const callCounts = d3.rollup(
-    csvData,
-    v => v.length,
-    d => d.Neighborhood
-  );
+  const callCounts = new Map(data);
+  // const callCounts = d3.rollup(
+  //   data,
+  //   v => v.length,
+  //   d => d.Neighborhood
+  // );
   const callCountLookup = Object.fromEntries(callCounts);
 
   // Define color scale based on call counts
