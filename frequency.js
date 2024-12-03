@@ -23,9 +23,10 @@ d3.csv('fixedDataset.csv').then(data => {
     originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
         callDateTime: d.callDateTime,
         callDate: parseDate(d.callDateTime.split(' ')[0]),
-        callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+        callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0]),
+        Neighborhood: d.Neighborhood
     }));
-    renderChart(0); // Initial render with no filtering
+    renderChart(0, null); // Initial render with no filtering
 });
 
 // Render chart based on the target year
