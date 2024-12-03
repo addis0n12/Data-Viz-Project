@@ -11,25 +11,31 @@ const parseTime = d3.timeParse('%H:%M:%S');
 const formatDate = d3.timeFormat('%Y-%m-%d');
 const formatTime = d3.timeFormat('%I %p');
 
+let selectedNeighborhood = null;
 let originalData = []; // To store the original data for re-filtering
 
-d3.csv('fixedDataset.csv').then(data => {
-    // originalData = data.map(({callDateTime, callDate, callTime}) => ({
-    //     callDate: new Date(callDate),
-    //     callTime: new Date(callTime),
-    //     callDateTime,
-    // }));
-    originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
-        callDateTime: d.callDateTime,
-        callDate: parseDate(d.callDateTime.split(' ')[0]),
-        callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+d3.json('data/frequencyData.json').then(data => {
+    originalData = data.map(({callDateTime, callDate, callTime}) => ({
+        callDate: new Date(callDate),
+        callTime: new Date(callTime),
+        callDateTime,
     }));
+    // originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
+    //     callDateTime: d.callDateTime,
+    //     callDate: parseDate(d.callDateTime.split(' ')[0]),
+    //     callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+    // }));
     renderChart(0); // Initial render with no filtering
 });
 
 // Render chart based on the target year
-function renderChart(targetYear) {
+function renderChart(targetYear, targetNeighborhood) {
     let data = originalData
+    selectedNeighborhood = targetNeighborhood;
+
+    if (selectedNeighborhood) {
+        data = data.filter(d => d.Neighborhood === selectedNeighborhood);
+    }
 
     // If year is 0 no additional filter is applied
     if (targetYear !== 0) {
@@ -73,14 +79,14 @@ function renderChart(targetYear) {
 
 // Button event listeners
 d3.select("#y2021").on('click', function () {
-    renderChart(2021);
+    renderChart(2021, selectedNeighborhood);
 });
 
 d3.select("#y2022").on('click', function () {
-    renderChart(2022);
+    renderChart(2022, selectedNeighborhood);
 });
 
 d3.select("#reset").on('click', function () {
-    renderChart(0); // Re-Render with no filter
+    renderChart(0, null); // Re-Render with no filter
 });
 
