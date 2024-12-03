@@ -12,17 +12,12 @@ Promise.all([
   // Create a Mercator projection that fits the data
   const projection = d3.geoIdentity()
     .reflectY(true)
-    .fitExtent([[20, 20], [width - 20, height - 20]], geoData)
+    .fitExtent([[20, 20], [width - 20, height - 20]], geoData);
 
   const path = d3.geoPath().projection(projection);
 
   // Aggregate 911 call data
   const callCounts = new Map(data);
-  // const callCounts = d3.rollup(
-  //   data,
-  //   v => v.length,
-  //   d => d.Neighborhood
-  // );
   const callCountLookup = Object.fromEntries(callCounts);
 
   // Define color scale based on call counts
@@ -31,7 +26,7 @@ Promise.all([
     .domain([0, maxCalls])
     .interpolator(d3.interpolateBlues);
 
-  //Draw map
+  // Draw map
   svg.append("g")
     .selectAll(".Neighborhood")
     .data(geoData.features)
@@ -44,26 +39,31 @@ Promise.all([
       return colorScale(calls);
     })
     .attr("stroke", "black")
+    .on("click", function (event, d) {
+      const neighborhood = d.properties.Name;
+      console.log(`Neighborhood clicked: ${neighborhood}`);
+      updateNeighborhood(neighborhood); // Trigger scatter plot update
+    })
     .append("title")
     .text(d => `${d.properties.Name}: ${callCountLookup[d.properties.Name] || 0} calls`);
 
-  //Legend
+  // Legend
   const legend = svg.append("g")
     .attr("transform", `translate(${width - 75}, ${height - 225})`);
 
   const legendScale = d3.scaleLinear()
-    .domain([0, d3.max([...callCounts.values()])])
+    .domain([0, maxCalls])
     .range([0, 100]);
 
   const legendAxis = d3.axisRight(legendScale).ticks(5);
-  
+
   legend.selectAll("rect")
     .data(d3.range(0, 1, 0.1))
     .enter().append("rect")
     .attr("y", (d, i) => i * 10)
     .attr("width", 10)
     .attr("height", 10)
-    .attr("fill", d => colorScale(d * d3.max([...callCounts.values()])));
+    .attr("fill", d => colorScale(d * maxCalls));
 
   legend.append("g")
     .attr("transform", "translate(10, 0)")
@@ -71,3 +71,11 @@ Promise.all([
 }).catch(error => {
   console.error("Error loading data:", error);
 });
+
+function updateNeighborhood(neighborhood) {
+  if (typeof renderChart === "function") {
+    renderChart(0, neighborhood);
+  } else {
+    console.error("renderChart function is not defined.");
+  }
+}
