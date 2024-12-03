@@ -68,23 +68,19 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
         colorScale.domain(descriptionCounts.map(d => d[0]));
 
         const bars = ctSvg.selectAll(".bar")
-            .data(descriptionCounts, d => d[0]);
+        .data(descriptionCounts, d => d[0]);
 
-        bars.exit()
-            .transition()
-            .duration(500)
-            .attr("x", ctWidth)
-            .remove();
-
-        bars.enter().append("rect")
+        const barsEnter = bars.enter().append("rect")
             .attr("class", "bar")
-            .attr("x", d => xScale(d[0]))
-            .attr("y", yScale(0))
+            .attr("x", ctWidth)
+            .attr("y", d => yScale(0))
             .attr("width", xScale.bandwidth())
             .attr("height", 0)
-            .attr("fill", d => colorScale(d[0]))
-            .transition()
+            .attr("fill", d => colorScale(d[0]));
+
+        barsEnter.transition()
             .duration(500)
+            .attr("x", d => xScale(d[0]))
             .attr("y", d => yScale(d[1]))
             .attr("height", d => yScale(0) - yScale(d[1]));
 
@@ -96,15 +92,11 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
             .attr("height", d => yScale(0) - yScale(d[1]))
             .attr("fill", d => colorScale(d[0]));
 
-        ctSvg.selectAll(".bar")
-            .data(descriptionCounts)
-            .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", d => xScale(d[0]))
-                .attr("y", d => yScale(d[1]))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => yScale(0) - yScale(d[1]))
-                .attr("fill", d => colorScale(d[0]));
+        bars.exit()
+            .transition()
+            .duration(500)
+            .attr("x", -xScale.bandwidth())
+            .remove();
 
         xAxis.transition().duration(500).call(d3.axisBottom(xScale))
             .selectAll("text")
