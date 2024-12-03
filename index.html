@@ -18,34 +18,28 @@
     .svg-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto;
+      grid-template-rows: auto auto;
       gap: 30px;
       align-items: start;
       margin-bottom: 20px;
     }
 
-    .titles {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-
+    .frequency-container,
     .callTypes-container {
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #frequency {
+      width: 100%;
+      height: auto;
     }
 
     #callTypes {
       width: 100%;
       height: auto;
-    }
-
-    .frequency-container {
-      text-align: center;
-    }
-
-    #frequency {
-      display: inline-block;
     }
 
     .map-container {
@@ -85,24 +79,24 @@
   <div class="title-container">
     <h1>911 Calls in Baltimore</h1>
   </div>
-  <div class="titles">
-    <h5>Call Time Frequency</h5>
-    <h5>Calls per Type</h5>
-  </div>
   <div class="svg-container">
-    <svg id="frequency"></svg>
+    <div class="frequency-container">
+      <h5>Call Time Frequency</h5>
+      <svg id="frequency" viewBox="0 0 900 450" preserveAspectRatio="xMinYMin meet"></svg>
+      <div class="button-container">
+        <button id="y2021">2021</button>
+        <button id="y2022">2022</button>
+        <button id="reset">Reset</button>
+      </div>
+    </div>
     <div class="callTypes-container">
+      <h5>Calls per Type</h5>
       <svg id="callTypes" viewBox="0 0 1000 500" preserveAspectRatio="xMinYMin meet"></svg>
-    </div>
-    <div class="button-container">
-      <button id="y2021">2021</button>
-      <button id="y2022">2022</button>
-      <button id="reset">Reset</button>
-    </div>
-    <div class="slider-container">
-      <label for="monthSlider">Filter by Month:</label>
-      <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
-      <span id="sliderValue">All</span>
+      <div class="slider-container">
+        <label for="monthSlider">Filter by Month:</label>
+        <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
+        <span id="sliderValue">All</span>
+      </div>
     </div>
   </div>
   <div class="map-container">
