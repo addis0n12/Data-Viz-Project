@@ -1,5 +1,5 @@
-const ctWidth = 800;
-const ctHeight = 400;
+const ctWidth = 1000;
+const ctHeight = 500;
 const ctMargin = { top: 20, right: 30, bottom: 100, left: 60 };
 
 const months = [
@@ -79,13 +79,13 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
             .attr("fill", d => colorScale(d[0]));
 
         barsEnter.transition()
-            .duration(500)
+            .duration(700)
             .attr("x", d => xScale(d[0]))
             .attr("y", d => yScale(d[1]))
             .attr("height", d => yScale(0) - yScale(d[1]));
 
         bars.transition()
-            .duration(500)
+            .duration(700)
             .attr("x", d => xScale(d[0]))
             .attr("y", d => yScale(d[1]))
             .attr("width", xScale.bandwidth())
@@ -94,16 +94,16 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
 
         bars.exit()
             .transition()
-            .duration(500)
+            .duration(700)
             .attr("x", -xScale.bandwidth())
             .remove();
 
-        xAxis.transition().duration(500).call(d3.axisBottom(xScale))
+        xAxis.transition().duration(700).call(d3.axisBottom(xScale))
             .selectAll("text")
             .attr("transform", "rotate(55)")
             .style("text-anchor", "start");
         
-        yAxis.transition().duration(500).call(d3.axisLeft(yScale));
+        yAxis.transition().duration(700).call(d3.axisLeft(yScale));
     }
 
     // Initial chart load

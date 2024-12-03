@@ -23,21 +23,28 @@
       transform: scale(0.8);
       transform-origin: top left;
     }
+    .slider-container {
+      display: flex;
+      justify-content: center;
+      width: calc(50%);
+      margin-left: auto;
+      margin-right: 13%; 
+    }
   </style>
 </head>
 <body>
   <div class="titles">
     <h5>Calls Per Neighborhood</h5>
     <h5>Calls per Type</h6>
-    <div>
-      <label for="monthSlider">Filter by Month:</label>
-      <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
-      <span id="sliderValue">All</span>
-    </div>
   </div>
   <div class="svg-container">
     <svg id="map"></svg>
     <svg id="callTypes"></svg>
+  </div>
+  <div class="slider-container">
+    <label for="monthSlider">Filter by Month:</label>
+    <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
+    <span id="sliderValue">All</span>
   </div>
   <h5>Call Time Frequency</h5>
   <svg id="frequency"></svg>
