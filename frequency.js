@@ -13,17 +13,17 @@ const formatTime = d3.timeFormat('%I %p');
 
 let originalData = []; // To store the original data for re-filtering
 
-d3.json('data/frequencyData.json').then(data => {
-    originalData = data.map(({callDateTime, callDate, callTime}) => ({
-        callDate: new Date(callDate),
-        callTime: new Date(callTime),
-        callDateTime,
-    }));
-    // originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
-    //     callDateTime: d.callDateTime,
-    //     callDate: parseDate(d.callDateTime.split(' ')[0]),
-    //     callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+d3.csv('fixedDataset.csv').then(data => {
+    // originalData = data.map(({callDateTime, callDate, callTime}) => ({
+    //     callDate: new Date(callDate),
+    //     callTime: new Date(callTime),
+    //     callDateTime,
     // }));
+    originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
+        callDateTime: d.callDateTime,
+        callDate: parseDate(d.callDateTime.split(' ')[0]),
+        callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0])
+    }));
     renderChart(0); // Initial render with no filtering
 });
 
