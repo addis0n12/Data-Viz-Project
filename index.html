@@ -6,56 +6,74 @@
   <title>Baltimore 911 Calls</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    .svg-container {
-      display: flex;
-      gap: 50px;
-      align-items: flex-start;
+    body {
+      font-family: Arial, sans-serif;
     }
+
+    .svg-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 30px;
+      align-items: start;
+      margin-bottom: 20px;
+    }
+
     .titles {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-right: 30px;
-      gap: 5px;
       margin-bottom: 10px;
     }
-    #callTypes {
-      transform: scale(0.8);
-      transform-origin: top left;
+
+    #frequency {
+      grid-column: span 2;
+      margin-top: 20px;
     }
+
     .slider-container {
+      grid-column: 2;
+      grid-row: 2;
       display: flex;
       justify-content: center;
-      width: calc(50%);
-      margin-left: auto;
-      margin-right: 13%; 
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .slider-container label {
+      margin-right: 10px;
+    }
+
+    button {
+      margin: 5px;
     }
   </style>
 </head>
 <body>
   <div class="titles">
     <h5>Calls Per Neighborhood</h5>
-    <h5>Calls per Type</h6>
+    <h5>Calls per Type</h5>
   </div>
   <div class="svg-container">
     <svg id="map"></svg>
     <svg id="callTypes"></svg>
+    <div class="slider-container">
+      <label for="monthSlider">Filter by Month:</label>
+      <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
+      <span id="sliderValue">All</span>
+    </div>
   </div>
-  <div class="slider-container">
-    <label for="monthSlider">Filter by Month:</label>
-    <input type="range" id="monthSlider" min="1" max="24" step="1" value="0" oninput="sliderValue.innerText = this.value">
-    <span id="sliderValue">All</span>
-  </div>
-  <h5>Call Time Frequency</h5>
+  <h5 style="text-align: center;">Call Time Frequency</h5>
   <svg id="frequency"></svg>
+
+  <div class="button-container" style="text-align: center; margin-top: 10px;">
+    <button id="y2021">2021</button>
+    <button id="y2022">2022</button>
+    <button id="reset">Reset</button>
+  </div>
 
   <script src="heatmap.js"></script>
   <script src="callTypes.js"></script>
-
-  <button id="y2021">2021</button>
-  <button id="y2022">2022</button>
-  <button id="reset">Reset</button>
-
   <script src="frequency.js"></script>
 </body>
 </html>
