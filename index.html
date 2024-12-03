@@ -18,7 +18,7 @@
     .svg-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
+      grid-template-rows: auto auto auto;
       gap: 30px;
       align-items: start;
       margin-bottom: 20px;
@@ -42,16 +42,24 @@
 
     .frequency-container {
       text-align: center;
-      margin-top: 20px;
     }
 
     #frequency {
       display: inline-block;
     }
 
+    .map-container {
+      grid-column: span 2;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #map {
+      display: inline-block;
+    }
+
     .slider-container {
       grid-column: 2;
-      grid-row: 2;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -60,6 +68,12 @@
 
     .slider-container label {
       margin-right: 10px;
+    }
+
+    .button-container {
+      grid-column: 1;
+      text-align: center;
+      margin-top: 10px;
     }
 
     button {
@@ -72,13 +86,18 @@
     <h1>911 Calls in Baltimore</h1>
   </div>
   <div class="titles">
-    <h5>Calls Per Neighborhood</h5>
+    <h5>Call Time Frequency</h5>
     <h5>Calls per Type</h5>
   </div>
   <div class="svg-container">
-    <svg id="map"></svg>
+    <svg id="frequency"></svg>
     <div class="callTypes-container">
       <svg id="callTypes" viewBox="0 0 1000 500" preserveAspectRatio="xMinYMin meet"></svg>
+    </div>
+    <div class="button-container">
+      <button id="y2021">2021</button>
+      <button id="y2022">2022</button>
+      <button id="reset">Reset</button>
     </div>
     <div class="slider-container">
       <label for="monthSlider">Filter by Month:</label>
@@ -86,15 +105,9 @@
       <span id="sliderValue">All</span>
     </div>
   </div>
-  <div class="frequency-container">
-    <h5>Call Time Frequency</h5>
-    <svg id="frequency"></svg>
-  </div>
-
-  <div class="button-container" style="text-align: center; margin-top: 10px;">
-    <button id="y2021">2021</button>
-    <button id="y2022">2022</button>
-    <button id="reset">Reset</button>
+  <div class="map-container">
+    <h5>Calls Per Neighborhood</h5>
+    <svg id="map"></svg>
   </div>
 
   <script src="heatmap.js"></script>
