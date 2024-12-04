@@ -20,7 +20,7 @@ d3.csv('fixedDataset.csv').then(data => {
     //     callTime: new Date(callTime),
     //     callDateTime,
     // }));
-    originalData = data.filter((item, i) => i % 500 === 0).map(d => ({
+    originalData = data.filter((item, i) => i % 300 === 0).map(d => ({
         callDateTime: d.callDateTime,
         callDate: parseDate(d.callDateTime.split(' ')[0]),
         callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0]),
