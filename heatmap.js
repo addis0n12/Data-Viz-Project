@@ -73,9 +73,14 @@ Promise.all([
 });
 
 function updateNeighborhood(neighborhood) {
-  if (typeof renderChart === "function") {
+  if ((typeof renderChart === "function")) {
     renderChart(0, neighborhood);
   } else {
     console.error("renderChart function is not defined.");
+  }
+  if (typeof updateChart === "function") {
+    updateChart('', neighborhood); // Update bar chart
+  } else {
+    console.error("updateChart function is not defined.");
   }
 }

@@ -32,11 +32,13 @@ const months = [
 const monthSlider = document.getElementById("monthSlider");
 const monthSliderText = document.getElementById("sliderValue");
 
+let currentNeighborhood = null;
+
 const ctSvg = d3.select("#callTypes")
     .attr("width", ctWidth)
     .attr("height", ctHeight);
 
-d3.json("data/callTypeData.json").then(data => {
+d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
     let filteredData;
 
     const xScale = d3.scaleBand()
@@ -56,13 +58,19 @@ d3.json("data/callTypeData.json").then(data => {
     const yAxis = ctSvg.append("g")
         .attr("transform", `translate(${ctMargin.left},0)`);
 
-    function updateChart(selectedMonth) {
-        const descriptionCounts = data[selectedMonth];
-        // filteredData = data.filter(d => d.callDateTime.startsWith(selectedMonth));
+    function updateChart(selectedMonth, targetNeighborhood) {
+        //const descriptionCounts = data[selectedMonth];
+        currentNeighborhood = targetNeighborhood;
 
-        // const descriptionCounts = d3.rollups(filteredData, v => v.length, d => d.description)
-        //     .sort((a, b) => a[1] - b[1])
-        //     .slice(-25);
+        filteredData = data.filter(d => d.callDateTime.startsWith(selectedMonth));
+
+        if (currentNeighborhood) {
+            filteredData = filteredData.filter(d => d.Neighborhood === currentNeighborhood);
+        }
+
+        const descriptionCounts = d3.rollups(filteredData, v => v.length, d => d.description)
+            .sort((a, b) => a[1] - b[1])
+            .slice(-25);
 
         xScale.domain(descriptionCounts.map(d => d[0]));
         yScale.domain([0, d3.max(descriptionCounts, d => d[1])]).nice();
@@ -103,18 +111,21 @@ d3.json("data/callTypeData.json").then(data => {
             .selectAll("text")
             .attr("transform", "rotate(55)")
             .style("text-anchor", "start");
-        
+
         yAxis.transition().duration(700).call(d3.axisLeft(yScale));
     }
 
     // Initial chart load
-    updateChart('');
+    updateChart('', null);
 
     // Slider event listener
     monthSlider.addEventListener("input", function() {
         const selectedIndex = parseInt(this.value, 10);
         const selectedMonth = months[selectedIndex];
         monthSliderText.textContent = selectedMonth || 'All';
-        updateChart(selectedMonth);
+        updateChart(selectedMonth, currentNeighborhood);
     });
+
+    // Makes updateChart part of global scope
+    window.updateChart = updateChart;
 });
