@@ -14,6 +14,15 @@ const formatTime = d3.timeFormat('%I %p');
 let selectedNeighborhood = null;
 let originalData = []; // To store the original data for re-filtering
 
+const tooltip = d3.select('body').append('div')
+    .style('position', 'absolute')
+    .style('padding', '5px')
+    .style('background', 'rgba(0, 0, 0, 0.7)')
+    .style('color', 'white')
+    .style('border-radius', '4px')
+    .style('pointer-events', 'none')
+    .style('opacity', 0);
+
 d3.csv('fixedDataset.csv').then(data => {
     // originalData = data.map(({callDateTime, callDate, callTime}) => ({
     //     callDate: new Date(callDate),
@@ -24,7 +33,9 @@ d3.csv('fixedDataset.csv').then(data => {
         callDateTime: d.callDateTime,
         callDate: parseDate(d.callDateTime.split(' ')[0]),
         callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0]),
-        Neighborhood: d.Neighborhood
+        Neighborhood: d.Neighborhood,
+        priority: d.priority,
+        description: d.description
     }));
     renderChart(0, null); // Initial render with no filtering
 });
@@ -75,7 +86,25 @@ function renderChart(targetYear, targetNeighborhood) {
         .attr('cy', d => yScale(d.callTime))
         .attr('r', 4)
         .attr('fill', 'rgb(194, 99, 99)')
-        .attr('opacity', 0.7);
+        .attr('opacity', 0.7)
+        .on('mouseover', (event, d) => {
+            console.log(d);
+            tooltip.style('opacity', 1)
+                .html(`
+                    <strong>Date:</strong> ${formatDate(d.callDate)}<br>
+                    <strong>Time:</strong> ${d3.timeFormat('%I:%M %p')(d.callTime)}<br>
+                    <strong>Severity:</strong> ${d.priority}<br>
+                    <strong>Reason:</strong> ${d.description}<br>
+                    <strong>Neighborhood:</strong> ${d.Neighborhood}
+                `);
+        })
+        .on('mousemove', (event) => {
+            tooltip.style('left', `${event.pageX + 10}px`)
+                .style('top', `${event.pageY - 20}px`);
+        })
+        .on('mouseout', () => {
+            tooltip.style('opacity', 0);
+        });
 }
 
 // Button event listeners
