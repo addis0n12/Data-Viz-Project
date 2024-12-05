@@ -32,6 +32,8 @@ const months = [
 const monthSlider = document.getElementById("monthSlider");
 const monthSliderText = document.getElementById("sliderValue");
 
+let currentSliderMonth = "";
+
 let currentNeighborhood = null;
 
 const ctSvg = d3.select("#callTypes")
@@ -122,6 +124,7 @@ d3.csv("fixedDataset.csv?timestamp=" + new Date().getTime()).then(data => {
     monthSlider.addEventListener("input", function() {
         const selectedIndex = parseInt(this.value, 10);
         const selectedMonth = months[selectedIndex];
+        currentSliderMonth = selectedMonth;
         monthSliderText.textContent = selectedMonth || 'All';
         updateChart(selectedMonth, currentNeighborhood);
     });

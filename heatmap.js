@@ -79,7 +79,7 @@ function updateNeighborhood(neighborhood) {
     console.error("renderChart function is not defined.");
   }
   if (typeof updateChart === "function") {
-    updateChart('', neighborhood); // Update bar chart
+    updateChart(currentSliderMonth, neighborhood); // Update bar chart
   } else {
     console.error("updateChart function is not defined.");
   }
