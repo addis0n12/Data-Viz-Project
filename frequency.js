@@ -88,7 +88,6 @@ function renderChart(targetYear, targetNeighborhood) {
         .attr('fill', 'rgb(194, 99, 99)')
         .attr('opacity', 0.7)
         .on('mouseover', (event, d) => {
-            console.log(d);
             tooltip.style('opacity', 1)
                 .html(`
                     <strong>Date:</strong> ${formatDate(d.callDate)}<br>
