@@ -74,7 +74,7 @@ Promise.all([
 
 function updateNeighborhood(neighborhood) {
   if ((typeof renderChart === "function")) {
-    renderChart(0, neighborhood);
+    renderChart(neighborhood);
   } else {
     console.error("renderChart function is not defined.");
   }

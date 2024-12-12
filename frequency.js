@@ -5,6 +5,7 @@ const sMargin = { top: 20, right: 20, bottom: 70, left: 50 };
 const sSvg = d3.select('#frequency')
     .attr('width', sWidth)
     .attr('height', sHeight);
+    
 
 const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
@@ -37,11 +38,11 @@ d3.csv('fixedDataset.csv').then(data => {
         priority: d.priority,
         description: d.description
     }));
-    renderChart(0, null); // Initial render with no filtering
+    renderChart(null); // Initial render with no filtering
 });
 
 // Render chart based on the target year
-function renderChart(targetYear, targetNeighborhood) {
+function renderChart(targetNeighborhood) {
     let data = originalData
     selectedNeighborhood = targetNeighborhood;
 
@@ -49,36 +50,71 @@ function renderChart(targetYear, targetNeighborhood) {
         data = data.filter(d => d.Neighborhood === selectedNeighborhood);
     }
 
-    // If year is 0 no additional filter is applied
-    if (targetYear !== 0) {
-        data = data.filter(d => d.callDate && d.callDate.getFullYear() === targetYear);
-    }
-
     sSvg.selectAll('*').remove();
 
+    // Zoom behavior setup
+    const zoom = d3.zoom()
+    .scaleExtent([1, 5]) // Minimum and maximum zoom
+    .translateExtent([[sMargin.left, 0], [sWidth - sMargin.right, sHeight]])
+    .on('zoom', zoomed);
+
+    // Append a clipPath to ensure elements stay within bounds
+    sSvg.append('clipPath')
+    .attr('id', 'clip')
+    .append('rect')
+    .attr('x', sMargin.left)
+    .attr('y', sMargin.top)
+    .attr('width', sWidth - sMargin.left - sMargin.right)
+    .attr('height', sHeight - sMargin.top - sMargin.bottom);
+
+    // Group for all data points
+    const scatterGroup = sSvg.append('g')
+    .attr('clip-path', 'url(#clip)');
+
+    // Append an invisible rectangle to capture zoom events
+    sSvg.append('rect')
+    .attr('width', sWidth)
+    .attr('height', sHeight)
+    .style('fill', 'none')
+    .style('pointer-events', 'all')
+    .call(zoom);
+
+
     const xScale = d3.scaleTime()
-        .domain(d3.extent(data, d => d.callDate))
-        .range([sMargin.left, sWidth - sMargin.right]);
+    .domain(d3.extent(originalData, d => d.callDate))
+    .range([sMargin.left, sWidth - sMargin.right]);
 
     const yScale = d3.scaleTime()
-        .domain(d3.extent(data, d => d.callTime))
+        .domain(d3.extent(originalData, d => d.callTime))
         .range([sHeight - sMargin.bottom, sMargin.top]);
 
+    function zoomed(event) {
+        const transform = event.transform;
+
+        // Update xScale with the transform
+        const updatedXScale = transform.rescaleX(xScale);
+        scatterGroup.select('.x-axis').call(d3.axisBottom(updatedXScale).tickFormat(formatDate));
+
+        // Update data points
+        scatterGroup.selectAll('circle')
+            .attr('cx', d => updatedXScale(d.callDate));
+    }
+
+    // Axes
     const xAxis = d3.axisBottom(xScale).ticks(12).tickFormat(formatDate);
     const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
 
-    sSvg.append('g')
+    scatterGroup.append('g')
+        .attr('class', 'x-axis')
         .attr('transform', `translate(0,${sHeight - sMargin.bottom})`)
-        .call(xAxis)
-        .selectAll('text')
-        .attr('transform', 'rotate(65)')
-        .style('text-anchor', 'start');
+        .call(xAxis);
 
-    sSvg.append('g')
+    scatterGroup.append('g')
         .attr('transform', `translate(${sMargin.left},0)`)
         .call(yAxis);
 
-    sSvg.selectAll('circle')
+    // Data points
+    scatterGroup.selectAll('circle')
         .data(data)
         .enter()
         .append('circle')
@@ -105,17 +141,4 @@ function renderChart(targetYear, targetNeighborhood) {
             tooltip.style('opacity', 0);
         });
 }
-
-// Button event listeners
-d3.select("#y2021").on('click', function () {
-    renderChart(2021, selectedNeighborhood);
-});
-
-d3.select("#y2022").on('click', function () {
-    renderChart(2022, selectedNeighborhood);
-});
-
-d3.select("#reset").on('click', function () {
-    renderChart(0, null); // Re-Render with no filter
-});
 
