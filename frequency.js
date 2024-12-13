@@ -6,6 +6,7 @@ const sSvg = d3.select('#frequency')
     .attr('width', sWidth)
     .attr('height', sHeight);
 
+let targetNH, targetDesc;
 
 const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
@@ -57,15 +58,29 @@ d3.csv('fixedDataset.csv').then(data => {
 });
 
 // Render chart based on the target year
-function renderChart(targetNeighborhood) {
+function renderChart(targetNeighborhood, targetDescription) {
     let data = originalData;
+
+    if (!targetDescription) {
+        targetNH = null;
+        targetDesc = null;
+    }
+
+    targetNeighborhood = targetNeighborhood || targetNH;
+    targetDescription = targetDescription || targetDesc;
+
+    targetNH = targetNeighborhood;
+    targetDesc = targetDescription;
 
     if (targetNeighborhood) {
         data = data.filter(d => d.Neighborhood === targetNeighborhood);
     }
 
-    // Limit amount of items on screen to reduce lag 
+    if (targetDescription) {
+        data = data.filter(d => d.description === targetDescription)
+    }
 
+    // Limit amount of items on screen to reduce lag 
     let dataSizeMult = Math.floor(data.length / 3500);
     if (dataSizeMult >= 2) data = data.filter((item, i) => i % dataSizeMult === 0)
 

@@ -2,8 +2,6 @@ const ctWidth = 1000;
 const ctHeight = 500;
 const ctMargin = { top: 20, right: 100, bottom: 100, left: 60 };
 
-let currentNeighborhood = null;
-
 // Add old color scale from previous d3 version
 var d3_category20 = [
   '#1f77b4', '#aec7e8',
@@ -65,7 +63,7 @@ d3.csv("fixedDataset.csv").then(data => {
     const legend = ctSvg.append("g")
         .attr("transform", `translate(${ctWidth - ctMargin.right + 25}, ${ctMargin.top})`);
 
-    function updateChart(neighborhood, catFilter) {
+    function updateChart(neighborhood) {
         let filteredData = data;
         if (neighborhood) filteredData = filteredData.filter(i => i.Neighborhood === neighborhood);
 
@@ -131,33 +129,37 @@ d3.csv("fixedDataset.csv").then(data => {
             .attr("x", d => xScale(d.data.month))
             .attr("width", xScale.bandwidth())
             .attr("y", d => yScale(d[1]))
-            .attr("height", d => yScale(d[0]) - yScale(d[1]));
+            .attr("height", d => yScale(d[0]) - yScale(d[1]))
+            .on("click", function(event, d) {
+                const category = d3.select(this.parentNode).datum().key;
+                renderChart(null, category);
+            });
 
-            bars.selectAll("rect")
-                .data(d => d)
-                .join(
-                    enter => enter
-                        .append("rect")
-                        .attr("x", d => xScale(d.data.month))
-                        .attr("y", yScale(0))
-                        .attr("height", 0)
-                        .attr("width", xScale.bandwidth())
-                        .transition()
-                        .duration(700)
-                        .attr("y", d => yScale(d[1]))
-                        .attr("height", d => yScale(d[0]) - yScale(d[1])),
-                    update => update
-                        .transition()
-                        .duration(700)
-                        .attr("y", d => yScale(d[1]))
-                        .attr("height", d => yScale(d[0]) - yScale(d[1])),
-                    exit => exit
-                        .transition()
-                        .duration(700)
-                        .attr("height", 0)
-                        .attr("y", yScale(0))
-                        .remove()
-            );
+        bars.selectAll("rect")
+            .data(d => d)
+            .join(
+                enter => enter
+                    .append("rect")
+                    .attr("x", d => xScale(d.data.month))
+                    .attr("y", yScale(0))
+                    .attr("height", 0)
+                    .attr("width", xScale.bandwidth())
+                    .transition()
+                    .duration(700)
+                    .attr("y", d => yScale(d[1]))
+                    .attr("height", d => yScale(d[0]) - yScale(d[1])),
+                update => update
+                    .transition()
+                    .duration(700)
+                    .attr("y", d => yScale(d[1]))
+                    .attr("height", d => yScale(d[0]) - yScale(d[1])),
+                exit => exit
+                    .transition()
+                    .duration(700)
+                    .attr("height", 0)
+                    .attr("y", yScale(0))
+                    .remove()
+        );
 
         bars.exit().remove();
 
