@@ -65,7 +65,10 @@ function renderChart(targetNeighborhood, targetDescription) {
         targetNH = null;
         targetDesc = [];
     } else {
-        targetDesc.push(targetDescription);
+        if (targetDesc.includes(targetDescription))
+            targetDesc.splice(targetDesc.findIndex(d => d === targetDescription), 1);
+        else
+            targetDesc.push(targetDescription);
     }
 
     targetNH = targetNeighborhood || targetNH;
@@ -74,7 +77,7 @@ function renderChart(targetNeighborhood, targetDescription) {
         data = data.filter(d => d.Neighborhood === targetNH);
     }
 
-    if (targetDescription) {
+    if (targetDesc.length) {
         data = data.filter(d => targetDesc.includes(d.description))
     }
 
