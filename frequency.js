@@ -5,7 +5,7 @@ const sMargin = { top: 20, right: 20, bottom: 70, left: 50 };
 const sSvg = d3.select('#frequency')
     .attr('width', sWidth)
     .attr('height', sHeight);
-    
+
 
 const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
@@ -73,8 +73,8 @@ function renderChart(targetNeighborhood) {
 
     // Append an invisible rectangle to capture zoom events
     sSvg.append('rect')
-    .attr('width', sWidth)
-    .attr('height', sHeight)
+    .attr('width', sWidth + 200)
+    .attr('height', sHeight + 100)
     .style('fill', 'none')
     .style('pointer-events', 'all')
     .call(zoom);
@@ -93,7 +93,7 @@ function renderChart(targetNeighborhood) {
 
         // Update xScale with the transform
         const updatedXScale = transform.rescaleX(xScale);
-        scatterGroup.select('.x-axis').call(d3.axisBottom(updatedXScale).tickFormat(formatDate));
+        sSvg.select('.x-axis').call(d3.axisBottom(updatedXScale).tickFormat(formatDate));
 
         // Update data points
         scatterGroup.selectAll('circle')
@@ -104,12 +104,12 @@ function renderChart(targetNeighborhood) {
     const xAxis = d3.axisBottom(xScale).ticks(12).tickFormat(formatDate);
     const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
 
-    scatterGroup.append('g')
+    sSvg.append('g')
         .attr('class', 'x-axis')
         .attr('transform', `translate(0,${sHeight - sMargin.bottom})`)
         .call(xAxis);
 
-    scatterGroup.append('g')
+    sSvg.append('g')
         .attr('transform', `translate(${sMargin.left},0)`)
         .call(yAxis);
 
