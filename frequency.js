@@ -121,7 +121,7 @@ function renderChart(targetNeighborhood) {
         .attr('cx', d => xScale(d.callDate))
         .attr('cy', d => yScale(d.callTime))
         .attr('r', 4)
-        .attr('fill', 'rgb(194, 99, 99)')
+        .attr('fill', 'rgb(99, 99, 200)')
         .attr('opacity', 0.7)
         .on('mouseover', (event, d) => {
             tooltip.style('opacity', 1)
