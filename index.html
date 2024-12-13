@@ -20,7 +20,6 @@
       grid-template-rows: auto auto;
       gap: 10px;
       align-items: start;
-      margin-bottom: 1px;
     }
 
     .frequency-container,
@@ -42,9 +41,9 @@
     }
 
     .map-container {
-      grid-column: span 2;
+      grid-column: span 1;
+      grid-row: span 2;
       text-align: center;
-      margin-top: 10px;
     }
 
     #map {
@@ -57,18 +56,18 @@
     <h3>911 Calls in Baltimore</h3>
   </div>
   <div class="svg-container">
-    <div class="frequency-container">
-      <h5>Call Time Frequency</h5>
-      <svg id="frequency" viewBox="0 0 900 450" preserveAspectRatio="xMinYMin meet"></svg>
+    <div class="map-container">
+      <h5>Calls Per Neighborhood</h5>
+      <svg id="map"></svg>
     </div>
     <div class="callTypes-container">
       <h5>Calls per Type</h5>
       <svg id="callTypes" viewBox="0 0 1000 500" preserveAspectRatio="xMinYMin meet"></svg>
     </div>
-  </div>
-  <div class="map-container">
-    <h5>Calls Per Neighborhood</h5>
-    <svg id="map"></svg>
+    <div class="frequency-container">
+      <h5>Call Time Frequency</h5>
+      <svg id="frequency" viewBox="0 0 900 450" preserveAspectRatio="xMinYMin meet"></svg>
+    </div>
   </div>
 
   <script src="heatmap.js"></script>
