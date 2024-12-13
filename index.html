@@ -49,6 +49,23 @@
     #map {
       display: inline-block;
     }
+
+    #reset-filters {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
+        background-color: rgba(99, 99, 200, 0.8);
+        color: white;
+        transition: background-color 0.3s, transform 0.2s ease;
+    }
+
+    #reset-filters:hover {
+        background-color: rgba(99, 99, 200, 1);
+        transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -59,6 +76,7 @@
     <div class="map-container">
       <h5>Calls Per Neighborhood</h5>
       <svg id="map"></svg>
+      <button id="reset-filters">Reset Filters</button>
     </div>
     <div class="callTypes-container">
       <h5>Calls per Type</h5>

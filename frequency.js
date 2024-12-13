@@ -59,10 +59,9 @@ d3.csv('fixedDataset.csv').then(data => {
 // Render chart based on the target year
 function renderChart(targetNeighborhood) {
     let data = originalData
-    selectedNeighborhood = targetNeighborhood;
 
-    if (selectedNeighborhood) {
-        data = data.filter(d => d.Neighborhood === selectedNeighborhood);
+    if (targetNeighborhood) {
+        data = data.filter(d => d.Neighborhood === targetNeighborhood);
     }
 
     sSvg.selectAll('*').remove();
@@ -101,7 +100,6 @@ function renderChart(targetNeighborhood) {
         const transform = event.transform;
 
         // Update xScale with the transform
-        console.log(transform);
         const updatedXScale = transform.rescaleX(xScale);
         sSvg.select('.x-axis').call(d3.axisBottom(updatedXScale).tickFormat(formatDate));
 
@@ -151,4 +149,3 @@ function renderChart(targetNeighborhood) {
             tooltip.style('opacity', 0);
         });
 }
-

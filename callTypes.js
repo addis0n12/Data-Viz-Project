@@ -65,23 +65,36 @@ d3.csv("fixedDataset.csv").then(data => {
     const legend = ctSvg.append("g")
         .attr("transform", `translate(${ctWidth - ctMargin.right + 25}, ${ctMargin.top})`);
 
-    function updateChart() {
-        // Group data by year-month and description
+    function updateChart(neighborhood, catFilter) {
+        let filteredData = data;
+        if (neighborhood) filteredData = filteredData.filter(i => i.Neighborhood === neighborhood);
+
         const groupedData = [];
-        for (let month of months) {
-            const filteredData = data.filter(d => month === d3.timeFormat("%b %Y")(d.date));
-        
+        const monthGroups = d3.rollup(filteredData, v => v, d => d3.timeFormat("%b %Y")(d.date));
+    
+        for (let [month, items] of monthGroups) {
+            if (!months.includes(month)) continue;
+
             const categoryCounts = categories.map(category => ({
                 category,
-                count: filteredData.filter(d => d.description === category).length
+                count: 0
             }));
+        
+            for (let item of items) {
+                const categoryIndex = categories.indexOf(item.description);
+                if (categoryIndex !== -1) {
+                    categoryCounts[categoryIndex].count += 1;
+                }
+            }
+        
+            const total = categoryCounts.reduce((sum, c) => sum + c.count, 0);
         
             groupedData.push({
                 month,
+                total,
                 categories: categoryCounts,
-                total: categoryCounts.reduce((sum, c) => sum + c.count, 0)
             });
-        };
+        }
 
         yScale.domain([0, d3.max(groupedData, d => d.total)]).nice();
         
@@ -102,6 +115,13 @@ d3.csv("fixedDataset.csv").then(data => {
             .attr("class", "bar-group")
             .attr("fill", d => colorScale(d.key));
 
+        if (groupedData.length === 0) {
+            bars.selectAll("rect").remove();
+            xAxis.call(d3.axisBottom(xScale));
+            yAxis.call(d3.axisLeft(yScale));
+            return;
+        }
+
         barsEnter.selectAll("rect")
             .data(d => d)
             .enter().append("rect")
@@ -110,15 +130,31 @@ d3.csv("fixedDataset.csv").then(data => {
             .attr("y", d => yScale(d[1]))
             .attr("height", d => yScale(d[0]) - yScale(d[1]));
 
-        bars.selectAll("rect")
-            .data(d => d)
-            .join("rect")
-            .attr("x", d => xScale(d.data.month))
-            .attr("width", xScale.bandwidth())
-            .transition()
-            .duration(700)
-            .attr("y", d => yScale(d[1]))
-            .attr("height", d => yScale(d[0]) - yScale(d[1]));
+            bars.selectAll("rect")
+                .data(d => d)
+                .join(
+                    enter => enter
+                        .append("rect")
+                        .attr("x", d => xScale(d.data.month))
+                        .attr("y", yScale(0))
+                        .attr("height", 0)
+                        .attr("width", xScale.bandwidth())
+                        .transition()
+                        .duration(700)
+                        .attr("y", d => yScale(d[1]))
+                        .attr("height", d => yScale(d[0]) - yScale(d[1])),
+                    update => update
+                        .transition()
+                        .duration(700)
+                        .attr("y", d => yScale(d[1]))
+                        .attr("height", d => yScale(d[0]) - yScale(d[1])),
+                    exit => exit
+                        .transition()
+                        .duration(700)
+                        .attr("height", 0)
+                        .attr("y", yScale(0))
+                        .remove()
+            );
 
         bars.exit().remove();
 
@@ -155,6 +191,12 @@ d3.csv("fixedDataset.csv").then(data => {
         legendItems.exit().remove();
     }
 
+    d3.select("#reset-filters").on("click", () => {
+        updateChart();
+        renderChart();
+    });
+
     // Initial chart load
     updateChart();
+    window.updateChart = updateChart;
 });
