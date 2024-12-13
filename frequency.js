@@ -102,7 +102,7 @@ function renderChart(targetNeighborhood) {
 
     // Axes
     const xAxis = d3.axisBottom(xScale).ticks(12).tickFormat(formatDate);
-    const yAxis = d3.axisLeft(yScale).ticks(10).tickFormat(formatTime);
+    const yAxis = d3.axisLeft(yScale).ticks(12).tickFormat(formatTime);
 
     sSvg.append('g')
         .attr('class', 'x-axis')
