@@ -15,6 +15,21 @@ const formatTime = d3.timeFormat('%I %p');
 let selectedNeighborhood = null;
 let originalData = []; // To store the original data for re-filtering
 
+const categories = ['DISORDERLY', '911/NO  VOICE', 'AUTO ACCIDENT', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'AUTO ACC/INJURY'];
+const colors = [
+    '#1f77b4', '#aec7e8',
+    '#ff7f0e', '#ffbb78',
+    '#2ca02c', '#98df8a',
+    '#d62728', '#ff9896',
+    '#9467bd', '#c5b0d5',
+    '#8c564b', '#c49c94',
+    '#e377c2', '#f7b6d2',
+    '#7f7f7f', '#c7c7c7',
+    '#bcbd22', '#dbdb8d',
+    '#17becf', '#9edae5'
+];
+const colorScale = d3.scaleOrdinal(colors).domain(categories);
+
 const tooltip = d3.select('body').append('div')
     .style('position', 'absolute')
     .style('padding', '5px')
@@ -116,7 +131,7 @@ function renderChart(targetNeighborhood) {
         .attr('cx', d => xScale(d.callDate))
         .attr('cy', d => yScale(d.callTime))
         .attr('r', 4)
-        .attr('fill', 'rgb(99, 99, 200)')
+        .attr('fill', d => colorScale(d.description))
         .attr('opacity', 0.7)
         .on('mouseover', (event, d) => {
             tooltip.style('opacity', 1)
