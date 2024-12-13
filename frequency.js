@@ -6,7 +6,7 @@ const sSvg = d3.select('#frequency')
     .attr('width', sWidth)
     .attr('height', sHeight);
 
-let targetNH, targetDesc;
+let targetNH, targetDesc = [];
 
 const parseDate = d3.timeParse('%Y/%m/%d');
 const parseTime = d3.timeParse('%H:%M:%S');
@@ -63,21 +63,19 @@ function renderChart(targetNeighborhood, targetDescription) {
 
     if (!targetDescription) {
         targetNH = null;
-        targetDesc = null;
+        targetDesc = [];
+    } else {
+        targetDesc.push(targetDescription);
     }
 
-    targetNeighborhood = targetNeighborhood || targetNH;
-    targetDescription = targetDescription || targetDesc;
-
-    targetNH = targetNeighborhood;
-    targetDesc = targetDescription;
+    targetNH = targetNeighborhood || targetNH;
 
     if (targetNeighborhood) {
-        data = data.filter(d => d.Neighborhood === targetNeighborhood);
+        data = data.filter(d => d.Neighborhood === targetNH);
     }
 
     if (targetDescription) {
-        data = data.filter(d => d.description === targetDescription)
+        data = data.filter(d => targetDesc.includes(d.description))
     }
 
     // Limit amount of items on screen to reduce lag 
