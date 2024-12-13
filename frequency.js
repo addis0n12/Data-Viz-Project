@@ -71,13 +71,7 @@ function renderChart(targetNeighborhood) {
     const scatterGroup = sSvg.append('g')
         .attr('clip-path', 'url(#clip)');
 
-    // Append an invisible rectangle to capture zoom events
-    sSvg.append('rect')
-        .attr('width', sWidth + 200)
-        .attr('height', sHeight + 100)
-        .style('fill', 'none')
-        .style('pointer-events', 'all')
-        .call(zoom);
+    sSvg.call(zoom);
 
 
     const xScale = d3.scaleTime()
