@@ -54,35 +54,35 @@ function renderChart(targetNeighborhood) {
 
     // Zoom behavior setup
     const zoom = d3.zoom()
-    .scaleExtent([1, 5]) // Minimum and maximum zoom
-    .translateExtent([[sMargin.left, 0], [sWidth - sMargin.right, sHeight]])
-    .on('zoom', zoomed);
+        .scaleExtent([1, 5]) // Minimum and maximum zoom
+        .translateExtent([[sMargin.left + sMargin.left, 0], [sWidth, sHeight]])
+        .on('zoom', zoomed);
 
     // Append a clipPath to ensure elements stay within bounds
     sSvg.append('clipPath')
-    .attr('id', 'clip')
-    .append('rect')
-    .attr('x', sMargin.left)
-    .attr('y', sMargin.top)
-    .attr('width', sWidth - sMargin.left - sMargin.right)
-    .attr('height', sHeight - sMargin.top - sMargin.bottom);
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('x', sMargin.left)
+        .attr('y', sMargin.top)
+        .attr('width', sWidth - sMargin.left - sMargin.right)
+        .attr('height', sHeight - sMargin.top - sMargin.bottom);
 
     // Group for all data points
     const scatterGroup = sSvg.append('g')
-    .attr('clip-path', 'url(#clip)');
+        .attr('clip-path', 'url(#clip)');
 
     // Append an invisible rectangle to capture zoom events
     sSvg.append('rect')
-    .attr('width', sWidth + 200)
-    .attr('height', sHeight + 100)
-    .style('fill', 'none')
-    .style('pointer-events', 'all')
-    .call(zoom);
+        .attr('width', sWidth + 200)
+        .attr('height', sHeight + 100)
+        .style('fill', 'none')
+        .style('pointer-events', 'all')
+        .call(zoom);
 
 
     const xScale = d3.scaleTime()
-    .domain(d3.extent(originalData, d => d.callDate))
-    .range([sMargin.left, sWidth - sMargin.right]);
+        .domain(d3.extent(originalData, d => d.callDate))
+        .range([sMargin.left, sWidth - sMargin.right]);
 
     const yScale = d3.scaleTime()
         .domain(d3.extent(originalData, d => d.callTime))
@@ -92,6 +92,7 @@ function renderChart(targetNeighborhood) {
         const transform = event.transform;
 
         // Update xScale with the transform
+        console.log(transform);
         const updatedXScale = transform.rescaleX(xScale);
         sSvg.select('.x-axis').call(d3.axisBottom(updatedXScale).tickFormat(formatDate));
 
