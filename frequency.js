@@ -45,7 +45,7 @@ d3.csv('fixedDataset.csv').then(data => {
     //     callTime: new Date(callTime),
     //     callDateTime,
     // }));
-    originalData = data.filter((item, i) => i % 300 === 0).map(d => ({
+    originalData = data.map(d => ({
         callDateTime: d.callDateTime,
         callDate: parseDate(d.callDateTime.split(' ')[0]),
         callTime: parseTime(d.callDateTime.split(' ')[1].split('+')[0]),
@@ -58,11 +58,16 @@ d3.csv('fixedDataset.csv').then(data => {
 
 // Render chart based on the target year
 function renderChart(targetNeighborhood) {
-    let data = originalData
+    let data = originalData;
 
     if (targetNeighborhood) {
         data = data.filter(d => d.Neighborhood === targetNeighborhood);
     }
+
+    // Limit amount of items on screen to reduce lag 
+
+    let dataSizeMult = Math.floor(data.length / 3500);
+    if (dataSizeMult >= 2) data = data.filter((item, i) => i % dataSizeMult === 0)
 
     sSvg.selectAll('*').remove();
 
@@ -128,7 +133,7 @@ function renderChart(targetNeighborhood) {
         .append('circle')
         .attr('cx', d => xScale(d.callDate))
         .attr('cy', d => yScale(d.callTime))
-        .attr('r', 4)
+        .attr('r', 3)
         .attr('fill', d => colorScale(d.description))
         .attr('opacity', 0.7)
         .on('mouseover', (event, d) => {
