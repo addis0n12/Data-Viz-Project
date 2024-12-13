@@ -37,7 +37,7 @@ d3.csv("fixedDataset.csv").then(data => {
         }
     }
 
-    const categories = ['DISORDERLY', '911/NO  VOICE', 'AUTO ACCIDENT', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'AUTO ACC/INJURY'];//, 'LOUD MUSIC'];
+    const categories = ['DISORDERLY', '911/NO  VOICE', 'AUTO ACC/INJURY', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'DIRECTED PATROL', 'Business Check'];
 
     const xScale = d3.scaleBand()
         .domain(months)
@@ -95,6 +95,9 @@ d3.csv("fixedDataset.csv").then(data => {
                 categories: categoryCounts,
             });
         }
+
+        const parseMonth = d3.timeParse("%b %Y");
+        groupedData.sort((a, b) => parseMonth(a.month) - parseMonth(b.month));
 
         yScale.domain([0, d3.max(groupedData, d => d.total)]).nice();
         
