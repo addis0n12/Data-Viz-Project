@@ -37,7 +37,7 @@ d3.csv("fixedDataset.csv").then(data => {
         }
     }
 
-    const categories = ['DISORDERLY', '911/NO  VOICE', 'AUTO ACC/INJURY', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'DIRECTED PATROL', 'Business Check'];
+    const categories = ['DISORDERLY', '911/NO VOICE', 'AUTO ACC/INJURY', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'DIRECTED PATROL', 'Business Check'];
 
     const xScale = d3.scaleBand()
         .domain(months)

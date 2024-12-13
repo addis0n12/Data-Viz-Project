@@ -15,7 +15,7 @@ const formatTime = d3.timeFormat('%I %p');
 let selectedNeighborhood = null;
 let originalData = []; // To store the original data for re-filtering
 
-const categories = ['DISORDERLY', '911/NO  VOICE', 'AUTO ACC/INJURY', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'DIRECTED PATROL', 'Business Check'];
+const categories = ['DISORDERLY', '911/NO VOICE', 'AUTO ACC/INJURY', 'COMMON ASSAULT', 'SILENT ALARM', 'FAMILY DISTURB', 'NARCOTICS', 'OTHER', 'HIT AND RUN', 'LARCENY', 'INVESTIGATE', 'BURGLARY', 'DESTRUCT PROP', 'DIRECTED PATROL', 'Business Check'];
 const colors = [
     '#1f77b4', '#aec7e8',
     '#ff7f0e', '#ffbb78',
